@@ -1,0 +1,641 @@
+/* ========================================
+   MACEDONIA MADNESS - PREMIUM HEADER STYLES
+   Premium and minimal design system
+   ======================================== */
+
+/* Macedonia Madness - Dynamic CSS Variables */
+:root {
+  /* Base Colors */
+  --macedonia-primary: #000000;
+  --macedonia-secondary: #ffffff;
+  --macedonia-accent: #C41E3A;
+  --macedonia-text: #333333;
+  --macedonia-text-light: #666666;
+  --macedonia-border: #e5e5e5;
+  
+  /* Premium Transitions */
+  --macedonia-transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --macedonia-transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --macedonia-transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Premium Shadows */
+  --macedonia-shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+  --macedonia-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --macedonia-shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --macedonia-shadow-xl: 0 16px 48px rgba(0,0,0,0.16);
+  
+  /* Spacing System */
+  --macedonia-space-xs: 0.25rem;
+  --macedonia-space-sm: 0.5rem;
+  --macedonia-space-md: 1rem;
+  --macedonia-space-lg: 1.5rem;
+  --macedonia-space-xl: 2rem;
+  --macedonia-space-2xl: 3rem;
+  
+  /* Typography */
+  --macedonia-font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --macedonia-font-secondary: 'Playfair Display', Georgia, serif;
+  
+  /* Border Radius */
+  --macedonia-radius-sm: 4px;
+  --macedonia-radius-md: 8px;
+  --macedonia-radius-lg: 12px;
+  --macedonia-radius-xl: 16px;
+}
+
+/* ========================================
+   MACEDONIA HEADER BASE STYLES
+   ======================================== */
+
+.macedonia-header {
+  position: relative;
+  background: var(--macedonia-secondary);
+  border-bottom: 1px solid var(--macedonia-border);
+  transition: all var(--macedonia-transition-medium);
+  z-index: 100;
+}
+
+.macedonia-header.macedonia-header--premium-effects {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.macedonia-header.macedonia-header--premium-effects[data-is-sticky="true"] {
+  box-shadow: var(--macedonia-shadow-md);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* 🔧 FIXED: Ridotto drasticamente il padding laterale per massimizzare lo spazio centrale */
+.macedonia-header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 8px; /* Ridotto drasticamente per massimizzare spazio */
+}
+
+@media (min-width: 768px) {
+  .macedonia-header-inner {
+    padding: 0 12px; /* Anche qui molto ridotto */
+  }
+}
+
+@media (min-width: 1200px) {
+  .macedonia-header-inner {
+    padding: 0 16px; /* Minimo padding anche su desktop large */
+  }
+}
+
+/* ========================================
+   MACEDONIA LOGO ENHANCEMENTS
+   ======================================== */
+
+.macedonia-logo {
+  position: relative;
+}
+
+.macedonia-logo-link {
+  display: flex;
+  align-items: center;
+  gap: var(--macedonia-space-sm);
+  transition: transform var(--macedonia-transition-medium);
+  text-decoration: none;
+}
+
+.macedonia-logo-link:hover {
+  transform: translateY(-1px);
+}
+
+.macedonia-logo-text {
+  font-family: var(--macedonia-font-secondary);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--macedonia-primary);
+  font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .macedonia-logo-text {
+    font-size: 1.25rem;
+  }
+}
+
+.macedonia-event-badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background: var(--macedonia-accent);
+  color: white;
+  font-size: 0.625rem;
+  padding: 2px 6px;
+  border-radius: var(--macedonia-radius-lg);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  animation: macedoniaPulse 2s infinite;
+}
+
+@keyframes macedoniaPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* ========================================
+   🔧 FIXED: MACEDONIA NAVIGATION PREMIUM
+   Rimosso l'accent doppio e mantenuto solo quello di Shopify
+   ======================================== */
+
+.macedonia-primary-nav .header__links-list {
+  gap: var(--macedonia-space-lg);
+}
+
+/* 🔧 REMOVED: Rimosso completamente l'accent aggiuntivo */
+.macedonia-primary-nav .header__links-list > li > a {
+  position: relative;
+  padding: var(--macedonia-space-sm) 0;
+  font-weight: 500;
+  color: var(--macedonia-text);
+  transition: color var(--macedonia-transition-fast);
+  text-decoration: none;
+  font-family: var(--macedonia-font-primary);
+  letter-spacing: 0.025em;
+}
+
+/* 🔧 REMOVED: Rimosso ::after per evitare accenti doppi */
+.macedonia-primary-nav .header__links-list > li > a:hover,
+.macedonia-primary-nav .header__links-list > li > a:focus {
+  color: var(--macedonia-primary);
+}
+
+/* ========================================
+   🔧 FIXED: NAVIGATION DROPDOWN STYLING
+   Stilizzazione corretta per .navigation__submenu
+   ======================================== */
+
+.navigation__submenu {
+  border-radius: var(--macedonia-radius-xl) !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  overflow: hidden !important;
+  background: white !important;
+  padding: var(--macedonia-space-sm) 0 !important;
+}
+
+.navigation__submenu li {
+  margin: 0 !important;
+}
+
+.navigation__submenu a {
+  padding: var(--macedonia-space-sm) var(--macedonia-space-lg) !important;
+  transition: all var(--macedonia-transition-fast) !important;
+  border-radius: 0 !important;
+  color: var(--macedonia-text) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+.navigation__submenu a:hover {
+  background: rgba(0, 0, 0, 0.02) !important;
+  color: var(--macedonia-primary) !important;
+}
+
+/* ========================================
+   🔧 FIXED: MACEDONIA HEADER ACTIONS
+   Aumentato padding tra search, account e cart
+   ======================================== */
+
+.macedonia-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--macedonia-space-xl); /* Aumentato ancora di più per maggiore spaziatura */
+}
+
+/* ========================================
+   MACEDONIA SEARCH PREMIUM
+   ======================================== */
+
+.macedonia-search-container {
+  position: relative;
+}
+
+.macedonia-search-trigger {
+  position: relative;
+  padding: var(--macedonia-space-sm);
+  border-radius: var(--macedonia-radius-md);
+  transition: all var(--macedonia-transition-fast);
+  color: var(--macedonia-text);
+  text-decoration: none;
+}
+
+.macedonia-search-trigger:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--macedonia-primary);
+}
+
+/* 🔧 FIXED: Dropdown menu soft styling */
+.macedonia-search-preview {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  background: white;
+  border-radius: var(--macedonia-radius-xl); /* Aumentato border-radius */
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* Shadow più soft */
+  border: 1px solid rgba(0,0,0,0.08); /* Bordo molto sottile */
+  padding: var(--macedonia-space-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all var(--macedonia-transition-medium);
+  z-index: 1000;
+}
+
+.macedonia-search-container:hover .macedonia-search-preview {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.macedonia-search-trending h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--macedonia-text);
+  margin: 0 0 var(--macedonia-space-sm) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.macedonia-trending-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--macedonia-space-sm);
+}
+
+.macedonia-trending-item {
+  display: flex;
+  align-items: center;
+  gap: var(--macedonia-space-sm);
+  padding: var(--macedonia-space-sm);
+  border-radius: var(--macedonia-radius-md);
+  transition: background var(--macedonia-transition-fast);
+  text-decoration: none;
+  color: var(--macedonia-text);
+}
+
+.macedonia-trending-item:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.macedonia-trending-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--macedonia-radius-sm);
+}
+
+.macedonia-trending-item span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ========================================
+   🔧 FIXED: MACEDONIA ACCOUNT PREMIUM
+   ======================================== */
+
+.macedonia-account-container {
+  position: relative;
+}
+
+.macedonia-account-trigger {
+  position: relative;
+  padding: var(--macedonia-space-sm);
+  border-radius: var(--macedonia-radius-md);
+  transition: all var(--macedonia-transition-fast);
+  color: var(--macedonia-text);
+  text-decoration: none;
+}
+
+.macedonia-account-trigger:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--macedonia-primary);
+}
+
+/* 🔧 FIXED: Account dropdown soft styling */
+.macedonia-account-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 280px;
+  background: white;
+  border-radius: var(--macedonia-radius-xl); /* Aumentato border-radius */
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1); /* Shadow più soft */
+  border: 1px solid rgba(0,0,0,0.08); /* Bordo molto sottile */
+  padding: var(--macedonia-space-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all var(--macedonia-transition-medium);
+  z-index: 1000;
+}
+
+.macedonia-account-container:hover .macedonia-account-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.macedonia-account-welcome {
+  padding: var(--macedonia-space-sm) 0;
+  border-bottom: 1px solid var(--macedonia-border);
+  margin-bottom: var(--macedonia-space-sm);
+}
+
+.macedonia-account-welcome span {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--macedonia-primary);
+}
+
+.macedonia-account-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.macedonia-account-links li {
+  margin: 0;
+}
+
+.macedonia-account-links a {
+  display: block;
+  padding: var(--macedonia-space-sm);
+  color: var(--macedonia-text);
+  text-decoration: none;
+  border-radius: var(--macedonia-radius-md);
+  transition: all var(--macedonia-transition-fast);
+  font-size: 0.875rem;
+}
+
+.macedonia-account-links a:hover {
+  background: rgba(0, 0, 0, 0.02);
+  color: var(--macedonia-primary);
+}
+
+/* 🔧 FIXED: Guest account styling migliorato */
+.macedonia-account-guest {
+  display: flex;
+  flex-direction: column;
+  gap: var(--macedonia-space-sm);
+}
+
+.macedonia-account-login,
+.macedonia-account-register {
+  display: block;
+  padding: var(--macedonia-space-sm) var(--macedonia-space-md);
+  text-align: center;
+  border-radius: var(--macedonia-radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all var(--macedonia-transition-fast);
+}
+
+.macedonia-account-login {
+  background: var(--macedonia-primary);
+  color: white;
+}
+
+.macedonia-account-login:hover {
+  background: var(--macedonia-accent);
+}
+
+.macedonia-account-register {
+  background: transparent;
+  color: var(--macedonia-primary);
+  border: 1px solid var(--macedonia-border);
+}
+
+.macedonia-account-register:hover {
+  background: var(--macedonia-primary);
+  color: white;
+}
+
+/* ========================================
+   MACEDONIA CART PREMIUM
+   ======================================== */
+
+.macedonia-cart-container {
+  position: relative;
+}
+
+.macedonia-cart-trigger {
+  position: relative;
+  padding: var(--macedonia-space-sm);
+  border-radius: var(--macedonia-radius-md);
+  transition: all var(--macedonia-transition-fast);
+  color: var(--macedonia-text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: var(--macedonia-space-xs);
+}
+
+.macedonia-cart-trigger:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--macedonia-primary);
+}
+
+.macedonia-cart-count {
+  background: var(--macedonia-accent);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--macedonia-radius-lg);
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.macedonia-cart-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--macedonia-primary);
+}
+
+/* ========================================
+   🔧 FIXED: MEGA NAVIGATION STYLING
+   Stilizzazione per tutti i tipi di dropdown
+   ======================================== */
+
+/* Meganav styling */
+.meganav {
+  border-radius: var(--macedonia-radius-xl) !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  overflow: hidden !important;
+  background: white !important;
+}
+
+.meganav a {
+  transition: all var(--macedonia-transition-fast) !important;
+  padding: var(--macedonia-space-sm) !important;
+  border-radius: var(--macedonia-radius-sm) !important;
+  color: var(--macedonia-text) !important;
+}
+
+.meganav a:hover {
+  background: rgba(0, 0, 0, 0.02) !important;
+  color: var(--macedonia-primary) !important;
+}
+
+/* Cross border dropdown */
+.header__cross-border-dropdown {
+  border-radius: var(--macedonia-radius-xl) !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  overflow: hidden !important;
+}
+
+/* ========================================
+   MACEDONIA EVENT ANNOUNCEMENT
+   ======================================== */
+
+.macedonia-event-announcement {
+  background: var(--macedonia-accent);
+  color: white;
+  padding: var(--macedonia-space-sm) 0;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.macedonia-event-announcement-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--macedonia-space-sm);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--macedonia-space-md);
+}
+
+.macedonia-event-text {
+  flex: 1;
+  text-align: center;
+}
+
+.macedonia-event-cta {
+  color: white;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: opacity var(--macedonia-transition-fast);
+}
+
+.macedonia-event-cta:hover {
+  opacity: 0.8;
+}
+
+/* ========================================
+   MACEDONIA EVENT THEMES
+   ======================================== */
+
+/* Christmas Theme */
+.macedonia-theme-christmas {
+  --macedonia-primary: #C41E3A;
+  --macedonia-secondary: #2E8B57;
+  --macedonia-accent: #FFD700;
+}
+
+.macedonia-header--christmas {
+  background: linear-gradient(135deg, #C41E3A 0%, #2E8B57 100%);
+  color: white;
+}
+
+/* Valentine Theme */
+.macedonia-theme-valentine {
+  --macedonia-primary: #FF1744;
+  --macedonia-secondary: #E91E63;
+  --macedonia-accent: #FFFFFF;
+}
+
+.macedonia-header--valentine {
+  background: linear-gradient(135deg, #FF1744 0%, #E91E63 100%);
+  color: white;
+}
+
+/* Summer Theme */
+.macedonia-theme-summer {
+  --macedonia-primary: #03A9F4;
+  --macedonia-secondary: #FF9800;
+  --macedonia-accent: #FFEB3B;
+}
+
+.macedonia-header--summer {
+  background: linear-gradient(135deg, #03A9F4 0%, #FF9800 100%);
+  color: white;
+}
+
+/* Black Friday Theme */
+.macedonia-theme-blackfriday {
+  --macedonia-primary: #000000;
+  --macedonia-secondary: #FF0000;
+  --macedonia-accent: #FFD700;
+}
+
+.macedonia-header--blackfriday {
+  background: linear-gradient(135deg, #000000 0%, #FF0000 100%);
+  color: white;
+}
+
+/* Halloween Theme */
+.macedonia-theme-halloween {
+  --macedonia-primary: #FF6600;
+  --macedonia-secondary: #000000;
+  --macedonia-accent: #6A0DAD;
+}
+
+.macedonia-header--halloween {
+  background: linear-gradient(135deg, #FF6600 0%, #000000 100%);
+  color: white;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .macedonia-search-preview,
+  .macedonia-account-menu {
+    width: 280px;
+    right: -50px;
+  }
+  
+  .macedonia-header-inner {
+    padding: 0 4px; /* Ancora più ridotto su mobile */
+  }
+  
+  .macedonia-primary-nav .header__links-list {
+    gap: var(--macedonia-space-md);
+  }
+  
+  .macedonia-header-actions {
+    gap: var(--macedonia-space-lg); /* Ridotto su mobile ma ancora ben spaziato */
+  }
+}
+
+@media (max-width: 480px) {
+  .macedonia-search-preview,
+  .macedonia-account-menu {
+    width: 250px;
+    right: -30px;
+  }
+  
+  .macedonia-event-announcement-content {
+    flex-direction: column;
+    gap: var(--macedonia-space-xs);
+  }
+  
+  .macedonia-header-actions {
+    gap: var(--macedonia-space-md); /* Spazio adeguato su schermi molto piccoli */
+  }
+}
