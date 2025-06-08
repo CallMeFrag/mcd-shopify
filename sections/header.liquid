@@ -1,0 +1,1196 @@
+{%- comment -%}
+  Macedonia Madness - Premium Header
+  Based on Stiletto theme with premium customizations
+  Supports dynamic event themes and seasonal changes
+{%- endcomment -%}
+
+{%- liquid
+  assign enable_transparent_template_list = section.settings.enable_transparent_template_list | downcase | split: ', '
+  assign transparent_header_enabled = false
+  if section.settings.enable_transparent_on_home and template.name == 'index'
+    assign transparent_header_enabled = true
+  endif
+
+  for template_item in enable_transparent_template_list
+    if template_item contains '.'
+      assign template_name = template_item | split: '.' | first
+      assign suffix_name = template_item | split: '.' | last
+
+      if template_name == template.name and suffix_name == template.suffix
+        assign transparent_header_enabled = true
+      endif
+    else
+      if template_item == template.name
+        assign transparent_header_enabled = true
+      endif
+    endif
+
+    if transparent_header_enabled
+      break
+    endif
+  endfor
+
+  comment
+    Macedonia Madness - Event Theme System
+  endcomment
+  assign current_event_theme = section.settings.macedonia_event_theme | default: 'default'
+  assign event_logo = blank
+  assign event_colors = false
+
+  case current_event_theme
+    when 'christmas'
+      assign event_logo = section.settings.logo_christmas
+      assign event_colors = true
+    when 'valentine'
+      assign event_logo = section.settings.logo_valentine
+      assign event_colors = true
+    when 'summer'
+      assign event_logo = section.settings.logo_summer
+      assign event_colors = true
+    when 'blackfriday'
+      assign event_logo = section.settings.logo_blackfriday
+      assign event_colors = true
+    when 'halloween'
+      assign event_logo = section.settings.logo_halloween
+      assign event_colors = true
+  endcase
+
+  comment
+    Macedonia Madness - Event Colors Setup
+  endcomment
+  assign macedonia_primary = section.settings.color_primary_default
+  assign macedonia_secondary = section.settings.color_secondary_default
+  assign macedonia_accent = section.settings.color_accent_default
+
+  case current_event_theme
+    when 'christmas'
+      assign macedonia_primary = section.settings.color_primary_christmas
+      assign macedonia_secondary = section.settings.color_secondary_christmas
+      assign macedonia_accent = section.settings.color_accent_christmas
+    when 'valentine'
+      assign macedonia_primary = section.settings.color_primary_valentine
+      assign macedonia_secondary = section.settings.color_secondary_valentine
+      assign macedonia_accent = section.settings.color_accent_valentine
+    when 'summer'
+      assign macedonia_primary = section.settings.color_primary_summer
+      assign macedonia_secondary = section.settings.color_secondary_summer
+      assign macedonia_accent = section.settings.color_accent_summer
+    when 'blackfriday'
+      assign macedonia_primary = section.settings.color_primary_blackfriday
+      assign macedonia_secondary = section.settings.color_secondary_blackfriday
+      assign macedonia_accent = section.settings.color_accent_blackfriday
+    when 'halloween'
+      assign macedonia_primary = section.settings.color_primary_halloween
+      assign macedonia_secondary = section.settings.color_secondary_halloween
+      assign macedonia_accent = section.settings.color_accent_halloween
+  endcase
+-%}
+
+<script>
+  {%- comment -%} Macedonia Madness - Enhanced header initialization {%- endcomment -%}
+  {% if section.settings.enable_sticky_header %}
+    document.documentElement.classList.add("sticky-header-enabled");
+  {% endif %}
+  {% if transparent_header_enabled %}
+    document.body.classList.add("header-transparent");
+  {% endif %}
+  {% if section.settings.layout == 'logo-center_nav-below' %}
+    document.body.classList.add("quick-search-position-left");
+  {% else %}
+    document.body.classList.add("quick-search-position-right");
+  {% endif %}
+  
+  // Macedonia Madness - Event theme class
+  document.body.classList.add("macedonia-theme-{{ current_event_theme }}");
+</script>
+
+{%- liquid
+  assign logo = section.settings.logo
+  assign logo_width = section.settings.logo_width
+  assign mobile_logo_width = section.settings.mobile_logo_width
+
+  comment
+    Macedonia Madness - Use event logo if available
+  endcomment
+  if event_logo != blank
+    assign logo = event_logo
+  endif
+
+  assign layout = section.settings.layout
+  assign logo_position = 'center'
+
+  if layout contains 'logo-left'
+    assign logo_position = 'left'
+  endif
+
+  assign navigation_position = 'below'
+
+  if layout contains 'nav-left'
+    assign navigation_position = 'left'
+  elsif layout contains 'nav-center'
+    assign navigation_position = 'center'
+  endif
+
+  assign color_text_transparent = section.settings.color_text_transparent
+  assign color_count_transparent = section.settings.color_count_transparent
+  assign logo_transparent = section.settings.logo_transparent
+
+  assign menu = section.settings.menu
+  assign secondary_menu = section.settings.secondary_menu
+
+  assign links = linklists[menu].links
+  assign secondary_links = linklists[secondary_menu].links
+
+  assign secondary_menu_valid = false
+
+  if secondary_menu != blank and secondary_menu != menu
+    assign secondary_menu_valid = true
+  endif
+
+  assign enable_locale_selector = section.settings.enable_locale_selector
+  assign enable_country_selector = section.settings.enable_country_selector
+  assign show_social_media = section.settings.show_social_media
+  assign show_social_media_mobile = section.settings.show_social_media_mobile
+
+  assign locale_selector = false
+  assign country_selector = false
+
+  if enable_locale_selector and shop.published_locales.size > 1
+    assign locale_selector = true
+  endif
+
+  if enable_country_selector and localization.available_countries.size > 1
+    assign country_selector = true
+  endif
+
+  capture logo_tag_type
+    if request.page_type == 'index'
+      echo 'h1'
+    else
+      echo 'span'
+    endif
+  endcapture
+-%}
+
+{%- capture logo_sizes -%}(max-width: 960px) {{ mobile_logo_width }}px, {{ logo_width }}px{%- endcapture -%}
+
+{%- comment -%} theme-check-disable UnusedAssign {%- endcomment -%}
+{%- assign font_logo = settings.font_logo -%}
+{%- assign capitalize_logo = settings.capitalize_logo -%}
+{%- assign logo_text_transform = settings.logo_text_transform -%}
+{%- comment -%} theme-check-enable UnusedAssign {%- endcomment -%}
+
+{%- assign mobile_menu_image_blocks = section.blocks | where: 'type', 'mobile_menu_images' -%}
+
+{%- comment -%} Macedonia Madness - Enhanced Logo with Event Support {%- endcomment -%}
+{%- capture header_logo -%}
+  <{{ logo_tag_type }} class="header__logo macedonia-logo">
+    <a
+      class="header__logo-link macedonia-logo-link"
+      href="{{ routes.root_url }}"
+      {% if logo != blank or logo_transparent != blank %}
+        aria-label="{{ shop.name }} - {{ section.settings.macedonia_tagline | default: 'Premium Fashion & Accessories' }}"
+      {% endif %}
+    >
+      {%- if logo != blank -%}
+        {%- render 'image' with image: logo, wrapper_class: 'regular-logo macedonia-regular-logo', sizes: logo_sizes, prioritize_loading: true -%}
+      {%- endif -%}
+
+      {%- if logo_transparent != blank -%}
+        {%- render 'image' with image: logo_transparent, wrapper_class: 'transparent-logo macedonia-transparent-logo', sizes: logo_sizes, prioritize_loading: true -%}
+      {%- endif -%}
+
+      {%- if logo == blank or logo_transparent == blank -%}
+        <span class="header__logo-text macedonia-logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+
+      {%- comment -%} Macedonia Madness - Event badge {%- endcomment -%}
+      {%- if current_event_theme != 'default' and section.settings.show_event_badge -%}
+        <span class="macedonia-event-badge macedonia-event-badge--{{ current_event_theme }}">
+          {{ section.settings.event_badge_text | default: 'Special Event' }}
+        </span>
+      {%- endif -%}
+    </a>
+  </{{ logo_tag_type }}>
+{%- endcapture -%}
+
+{%- comment -%} Macedonia Madness - Enhanced Search with Live Suggestions {%- endcomment -%}
+{%- capture search_icon -%}
+  <div class="macedonia-search-container">
+    <a
+      class="
+        header__icon-touch
+        header__icon-touch--search
+        macedonia-search-trigger
+        {% if settings.enable_quick_search %}no-transition{% endif %}
+      "
+      href="{{ routes.search_url }}"
+      {% if settings.enable_quick_search %}
+        data-search
+      {% endif %}
+      aria-label="{{ 'general.accessibility.open_search' | t }}"
+      aria-controls="MainQuickSearch"
+      aria-expanded="false"
+    >
+      {% render 'icon-button' with icon: 'header-search' %}
+      {% render 'icon-button' with icon: 'header-menu-close' %}
+    </a>
+    
+    {%- comment -%} Macedonia Madness - Quick search preview {%- endcomment -%}
+    {%- if section.settings.enable_search_preview -%}
+      <div class="macedonia-search-preview" data-search-preview>
+        <div class="macedonia-search-trending">
+          <h4>{{ section.settings.trending_title | default: 'Trending Now' }}</h4>
+          <div class="macedonia-trending-items">
+            {%- for i in (1..4) -%}
+              {%- assign trending_key = 'trending_product_' | append: i -%}
+              {%- assign trending_product = section.settings[trending_key] -%}
+              {%- if trending_product != blank -%}
+                <a href="{{ trending_product.url }}" class="macedonia-trending-item">
+                  <img src="{{ trending_product.featured_image | image_url: width: 40 }}" alt="{{ trending_product.title }}" loading="lazy">
+                  <span>{{ trending_product.title }}</span>
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endcapture -%}
+
+{%- comment -%} Macedonia Madness - Enhanced Account with Quick Menu {%- endcomment -%}
+{%- capture account_icon -%}
+  <div class="macedonia-account-container">
+    <a
+      class="header__icon-touch header__icon-touch--account macedonia-account-trigger"
+      href="{{ routes.account_url }}"
+      aria-label="{{ 'general.accessibility.go_account' | t }}"
+    >
+      {% render 'icon-button' with icon: 'header-account' %}
+    </a>
+    
+    {%- comment -%} Macedonia Madness - Account quick menu {%- endcomment -%}
+    {%- if section.settings.enable_account_menu -%}
+      <div class="macedonia-account-menu" data-account-menu>
+        {%- if customer -%}
+          <div class="macedonia-account-welcome">
+            <span>{{ 'customer.account.welcome' | t: name: customer.first_name }}</span>
+          </div>
+          <ul class="macedonia-account-links">
+            <li><a href="{{ routes.account_url }}">{{ 'customer.account.title' | t }}</a></li>
+            <li><a href="{{ routes.account_orders_url }}">{{ 'customer.orders.title' | t }}</a></li>
+            <li><a href="{{ routes.account_addresses_url }}">{{ 'customer.addresses.title' | t }}</a></li>
+            <li><a href="{{ routes.account_logout_url }}">{{ 'customer.log_out' | t }}</a></li>
+          </ul>
+        {%- else -%}
+          <div class="macedonia-account-guest">
+            <a href="{{ routes.account_login_url }}" class="macedonia-account-login">{{ 'customer.login_page.title' | t }}</a>
+            <a href="{{ routes.account_register_url }}" class="macedonia-account-register">{{ 'customer.register.title' | t }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endcapture -%}
+
+{%- comment -%} Macedonia Madness - Enhanced Cart with Mini Preview {%- endcomment -%}
+{%- capture cart_icon -%}
+  <div class="macedonia-cart-container">
+    <a
+      class="header__icon-touch macedonia-cart-trigger no-transition"
+      href="{{ routes.cart_url }}"
+      aria-label="{{ 'general.accessibility.open_cart' | t }}"
+      data-js-cart-icon="{{ section.settings.cart_icon }}"
+    >
+      {% assign cart_icon_name = 'header-shopping-' | append: section.settings.cart_icon %}
+      {% render 'icon-button', icon: cart_icon_name %}
+
+      <span data-js-cart-count class="macedonia-cart-count">{{ cart.item_count }}</span>
+      
+      {%- comment -%} Macedonia Madness - Cart value indicator {%- endcomment -%}
+      {%- if section.settings.show_cart_value and cart.item_count > 0 -%}
+        <span class="macedonia-cart-value">{{ cart.total_price | money_without_trailing_zeros }}</span>
+      {%- endif -%}
+    </a>
+  </div>
+{%- endcapture -%}
+
+{%- comment -%} Macedonia Madness - Enhanced Navigation {%- endcomment -%}
+{%- capture primary_nav -%}
+  <div
+    class="header__links-primary-scroll-container macedonia-nav-container"
+    data-scroll-container
+    data-at-start="true"
+    data-at-end="{% if section.settings.layout == 'logo-center_nav-below' or section.settings.layout == 'logo-left_nav-below' %}true{% else %}false{% endif %}"
+    data-axis="horizontal"
+  >
+    <button
+      class="scroll-button macedonia-scroll-button"
+      data-position="start"
+      data-direction="backwards"
+      title="{{ 'general.accessibility.previous' | t }}"
+    >
+      {% render 'icon' with icon: 'chevron' %}
+    </button>
+    <div class="scroll-overflow-indicator-wrap" data-position="start">
+      <div class="scroll-overflow-indicator"></div>
+    </div>
+    <div data-scroll-container-viewport>
+      <div class="scroll-sentinal scroll-sentinal--start" data-position="start"></div>
+      <nav class="header__links header__links-primary macedonia-primary-nav" data-navigation>
+        {%- if menu == blank and secondary_menu != blank -%}
+          {% render 'navigation' 
+            with menu: secondary_links,
+            blocks: section.blocks,
+            featured_link_label: section.settings.featured_link_label %}
+        {%- else -%}
+          {% render 'navigation' 
+            with menu: links,
+            blocks: section.blocks,
+            featured_link_label: section.settings.featured_link_label %}
+        {%- endif -%}
+      </nav>
+      <div class="scroll-sentinal scroll-sentinal--end" data-position="end"></div>
+    </div>
+    <div class="scroll-overflow-indicator-wrap" data-position="end">
+      <div class="scroll-overflow-indicator"></div>
+    </div>
+    <button
+      class="scroll-button macedonia-scroll-button"
+      data-position="end"
+      data-direction="forwards"
+      title="{{ 'general.accessibility.next' | t }}"
+    >
+      {% render 'icon' with icon: 'chevron' %}
+    </button>
+  </div>
+{%- endcapture -%}
+
+{%- comment -%} Macedonia Madness - Enhanced Secondary Navigation {%- endcomment -%}
+{%- capture secondary_nav -%}
+  {%- if secondary_menu_valid -%}
+    <nav class="header__links header__links-secondary macedonia-secondary-nav" data-secondary-navigation>
+      {% render 'navigation' with menu: secondary_links, no_children: true %}
+    </nav>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- comment -%} Macedonia Madness - Enhanced Mobile Menu {%- endcomment -%}
+{%- capture menu_icon -%}
+  <button
+    class="header__menu-icon header__icon-touch header__icon-menu macedonia-menu-trigger"
+    aria-label="{{ 'general.accessibility.open_menu' | t }}"
+    aria-expanded="false"
+    data-aria-label-closed="{{ 'general.accessibility.open_menu' | t }}"
+    data-aria-label-opened="{{ 'general.accessibility.close_menu' | t }}"
+    data-js-menu-button
+  >
+    {% render 'icon-button' with icon: 'header-menu' %}
+    {% render 'icon-button' with icon: 'header-menu-close' %}
+  </button>
+{%- endcapture -%}
+
+{%- capture filler -%}<div class="header__filler"></div>{%- endcapture -%}
+
+{%- comment -%} Macedonia Madness - Enhanced Localization {%- endcomment -%}
+{%- capture localization_dropdowns -%}
+  {%- if locale_selector or country_selector -%}
+    <nav class="header__cross-border fs-body-50 macedonia-localization" data-secondary-navigation>
+      {%
+        render 'cross-border' with
+        show_locale: locale_selector,
+        show_country: country_selector,
+        id: 'header',
+        desktop_only: true
+      %}
+    </nav>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture social_icons -%}
+  {%- if show_social_media -%}
+    <div class="macedonia-social-icons">
+      {% render 'social-icons' %}
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture social_icons_mobile -%}
+  {%- if show_social_media_mobile -%}
+    <div class="macedonia-social-icons-mobile">
+      {% render 'social-icons' %}
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture social_icons_and_second_menu -%}
+  {{ social_icons }}
+  {{ secondary_nav }}
+{%- endcapture -%}
+
+{%- comment -%} Macedonia Madness - Event Announcement Bar {%- endcomment -%}
+{%- if section.settings.enable_event_announcement and current_event_theme != 'default' -%}
+  <div class="macedonia-event-announcement macedonia-event-announcement--{{ current_event_theme }}">
+    <div class="macedonia-event-announcement-content">
+      {%- if section.settings.event_announcement_icon -%}
+        <span class="macedonia-event-icon">{{ section.settings.event_announcement_icon }}</span>
+      {%- endif -%}
+      <span class="macedonia-event-text">{{ section.settings.event_announcement_text }}</span>
+      {%- if section.settings.event_announcement_link != blank -%}
+        <a href="{{ section.settings.event_announcement_link }}" class="macedonia-event-cta">
+          {{ section.settings.event_announcement_cta | default: 'Shop Now' }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+<header
+  data-section-id="{{ section.id }}"
+  data-section-type="header"
+  {% if section.settings.enable_sticky_header %}
+    data-enable-sticky-header="true"
+  {% endif %}
+  {% if transparent_header_enabled %}
+    data-transparent-header="true"
+  {% endif %}
+  class="
+    header
+    macedonia-header
+    macedonia-header--{{ current_event_theme }}
+    header--layout-{{ layout | replace: "_", "-" }}
+    {% if logo != blank -%}
+      header--has-logo
+    {%- endif %}
+    {% if transparent_header_enabled %}
+      header--transparent
+    {% endif %}
+    {% if logo_transparent != blank %}
+      header--has-transparent-logo
+    {% endif %}
+    {% if shop.customer_accounts_enabled -%}
+      header--has-accounts
+    {%- endif %}
+    {% if secondary_menu_valid -%}
+      header--has-secondary-menu
+    {%- endif %}
+    {% if menu == blank and secondary_menu != blank -%}
+      header--primary-menu-is-secondary
+    {%- endif %}
+    {% if settings.capitalize_navigation -%}
+      header--navigation-is-all-caps
+    {%- endif %}
+    {% if social_icons != blank -%}
+      header--has-social-links
+    {%- endif %}
+    {% if enable_locale_selector or enable_country_selector -%}
+      header--has-country-or-locale
+    {%- endif %}
+    {% if section.settings.enable_premium_effects -%}
+      macedonia-header--premium-effects
+    {%- endif %}
+  "
+  {% if section.settings.enable_sticky_header %}
+    data-is-sticky="true"
+  {% endif %}
+  data-navigation-position="{{ navigation_position }}"
+  data-logo-position="{{ logo_position }}"
+  style="
+    --logo-width: {{ logo_width }}px;
+    --mobile-logo-width: {{ mobile_logo_width }}px;
+    --color-cart-count-transparent: {{ color_count_transparent }};
+    --color-text-transparent: {{ color_text_transparent }};
+    --divider-width: {{ section.settings.divider_width }};
+    --color-text-featured-link: {{ section.settings.featured_link_color }};
+    --macedonia-primary: {{ macedonia_primary | default: '#000000' }};
+    --macedonia-secondary: {{ macedonia_secondary | default: '#ffffff' }};
+    --macedonia-accent: {{ macedonia_accent | default: '#C41E3A' }};
+    --macedonia-header-padding: {{ section.settings.header_padding | default: 16 }}px;
+    --macedonia-logo-scale: {{ section.settings.logo_scale | default: 100 }}%;
+  "
+>
+  <a href="#main" class="header__skip-to-content btn btn--primary btn--small">
+    {{ 'general.accessibility.skip_to_content' | t }}
+  </a>
+
+  <div class="header__inner macedonia-header-inner">
+    <div class="header__row header__row-desktop upper macedonia-header-upper">
+      <div class="header__row-segment header__row-segment-desktop left">
+        {%- if logo_position == 'center' -%}
+          {{ secondary_nav }}
+        {%- else -%}
+          {%- if navigation_position == 'below' -%}
+            {{ header_logo }}
+          {%- else -%}
+            {{ filler }}
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      <div class="header__row-segment header__row-segment-desktop header__row-segment-desktop--logo-left right">
+        {%- if logo_position == 'left' -%}
+          {{ secondary_nav }}
+        {%- endif -%}
+        {{ social_icons }}
+        {{ localization_dropdowns }}
+      </div>
+    </div>
+
+    {%- if logo_position == 'center' and navigation_position == 'below' -%}
+      <div class="header__row header__row-desktop logo-only macedonia-header-logo-row">
+        {{ header_logo }}
+      </div>
+    {%- endif -%}
+
+    {%- capture lower_left_content -%}
+      {%- if logo_position == 'center' and navigation_position == 'below' -%}
+        {{ search_icon }}
+      {%- elsif logo_position == 'center' and navigation_position == 'left' -%}
+        {{ primary_nav }}
+      {%- elsif logo_position == 'left' and navigation_position == 'below' -%}
+        {{ primary_nav }}
+      {%- elsif logo_position == 'left' and navigation_position == 'left' -%}
+        {{ header_logo }}
+        {{ primary_nav }}
+      {%- elsif logo_position == 'left' and navigation_position == 'center' -%}
+        {{ header_logo }}
+      {%- endif -%}
+    {%- endcapture -%}
+
+    <div class="header__row header__row-desktop lower macedonia-header-lower {% if logo_position == 'center' or navigation_position == 'center' %}three-segment{% endif %}">
+      <div class="header__row-segment header__row-segment-desktop left {% if lower_left_content contains "header__links-list" %}contains-nav{% endif %}">
+        {{ lower_left_content }}
+      </div>
+
+      {%- if logo_position == 'center' and navigation_position == 'below' -%}
+        {{ primary_nav }}
+      {%- elsif logo_position == 'center' and navigation_position == 'left' -%}
+        {{ header_logo }}
+      {%- elsif logo_position == 'left' and navigation_position == 'center' -%}
+        {{ primary_nav }}
+      {%- endif -%}
+
+      <div class="header__row-segment header__row-segment-desktop right macedonia-header-actions">
+        {%- unless logo_position == 'center' and navigation_position == 'below' -%}
+          {{ search_icon }}
+        {%- endunless -%}
+        {%- if shop.customer_accounts_enabled -%}
+          {{ account_icon }}
+        {%- endif -%}
+        {{ cart_icon }}
+      </div>
+    </div>
+
+    <div class="header__row header__row-mobile macedonia-header-mobile {% if logo_position == 'center' %}three-segment{% endif %}">
+      {%- if logo_position == 'center' -%}
+        <div class="header__row-segment left">
+          {{ menu_icon }}
+        </div>
+
+        {{ header_logo }}
+
+        <div class="header__row-segment right">
+          {{ search_icon }}
+          {%- if shop.customer_accounts_enabled -%}
+            {{ account_icon }}
+          {%- endif -%}
+          {{ cart_icon }}
+        </div>
+      {%- else -%}
+        <div class="header__row-segment left">
+          {{ header_logo }}
+        </div>
+
+        <div class="header__row-segment right">
+          {{ search_icon }}
+          {{ cart_icon }}
+          {{ menu_icon }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="no-js-menu no-js-menu--desktop">
+    {% render 'no-js-navmenu' with menu: menu, secondary_menu: secondary_menu %}
+  </div>
+
+  {% render 'drawer-menu',
+    links: links,
+    secondary_links: secondary_links,
+    locale_selector: locale_selector,
+    country_selector: country_selector,
+    mobile_menu_image_blocks: mobile_menu_image_blocks,
+    social_icons_mobile: social_icons_mobile
+  %}
+</header>
+
+<script>
+  // Macedonia Madness - Enhanced header height calculation
+  const header = document.querySelector('[data-section-type="header"]');
+  const announcement = document.querySelector('.macedonia-event-announcement');
+  let headerHeight = header.offsetHeight;
+  
+  if (announcement) {
+    headerHeight += announcement.offsetHeight;
+  }
+  
+  document.documentElement.style.setProperty('--height-header', headerHeight + 'px');
+  document.documentElement.style.setProperty('--height-macedonia-header', header.offsetHeight + 'px');
+</script>
+
+{%- if settings.enable_confirmation_popup -%}
+  <div
+    class="
+      purchase-confirmation-popup
+      macedonia-purchase-popup
+      {% if settings.enable_section_animations %}
+        animation
+        animation--purchase-confirmation
+      {% endif %}
+    "
+    data-purchase-confirmation-popup
+  >
+    <div class="purchase-confirmation-popup__inner"></div>
+  </div>
+{%- endif -%}
+
+{% render 'flash-alert' %}
+
+{% schema %}
+{
+  "name": "MCD - Header Premium",
+  "class": "header__outer-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🎯 Macedonia Madness - Layout Settings"
+    },
+    {
+      "id": "layout",
+      "type": "select",
+      "label": "Header Layout",
+      "options": [
+        {
+          "value": "logo-center_nav-below",
+          "label": "Logo Center, Navigation Below"
+        },
+        {
+          "value": "logo-left_nav-left",
+          "label": "Logo Left, Navigation Left"
+        },
+        {
+          "value": "logo-left_nav-center",
+          "label": "Logo Left, Navigation Center"
+        },
+        {
+          "value": "logo-center_nav-left",
+          "label": "Logo Center, Navigation Left"
+        },
+        {
+          "value": "logo-left_nav-below",
+          "label": "Logo Left, Navigation Below"
+        }
+      ],
+      "default": "logo-center_nav-below"
+    },
+    {
+      "id": "enable_sticky_header",
+      "type": "checkbox",
+      "label": "Enable Sticky Header",
+      "default": true
+    },
+    {
+      "id": "enable_premium_effects",
+      "type": "checkbox",
+      "label": "Enable Premium Effects (Blur, Shadows)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "header_padding",
+      "label": "Header Padding",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "radio",
+      "id": "cart_icon",
+      "label": "Cart Icon Style",
+      "default": "bag",
+      "options": [
+        {
+          "value": "bag",
+          "label": "Shopping Bag"
+        },
+        {
+          "value": "cart",
+          "label": "Shopping Cart"
+        }
+      ]
+    },
+    {
+      "id": "divider_width",
+      "type": "select",
+      "label": "Navigation Divider Width",
+      "default": "1px",
+      "options": [
+        {
+          "value": "0px",
+          "label": "None"
+        },
+        {
+          "value": "1px",
+          "label": "Thin"
+        },
+        {
+          "value": "2px",
+          "label": "Medium"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "🌟 Macedonia Madness - Premium Features"
+    },
+    {
+      "id": "enable_search_preview",
+      "type": "checkbox",
+      "label": "Enable Search Preview with Trending",
+      "default": true
+    },
+    {
+      "id": "trending_title",
+      "type": "text",
+      "label": "Trending Section Title",
+      "default": "Trending Now"
+    },
+    {
+      "id": "trending_product_1",
+      "type": "product",
+      "label": "Trending Product 1"
+    },
+    {
+      "id": "trending_product_2",
+      "type": "product",
+      "label": "Trending Product 2"
+    },
+    {
+      "id": "trending_product_3",
+      "type": "product",
+      "label": "Trending Product 3"
+    },
+    {
+      "id": "trending_product_4",
+      "type": "product",
+      "label": "Trending Product 4"
+    },
+    {
+      "id": "enable_account_menu",
+      "type": "checkbox",
+      "label": "Enable Account Quick Menu",
+      "default": true
+    },
+    {
+      "id": "enable_mini_cart",
+      "type": "checkbox",
+      "label": "Enable Mini Cart Preview",
+      "default": true
+    },
+    {
+      "id": "show_cart_value",
+      "type": "checkbox",
+      "label": "Show Cart Total Value",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "🎭 Macedonia Madness - Event Theme System"
+    },
+    {
+      "id": "macedonia_event_theme",
+      "type": "select",
+      "label": "Current Event Theme",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default - Clean & Minimal"
+        },
+        {
+          "value": "christmas",
+          "label": "Christmas - Festive Red & Gold"
+        },
+        {
+          "value": "valentine",
+          "label": "Valentine's Day - Romantic Pink & Red"
+        },
+        {
+          "value": "summer",
+          "label": "Summer - Fresh Blue & Orange"
+        },
+        {
+          "value": "blackfriday",
+          "label": "Black Friday - Bold Black & Red"
+        },
+        {
+          "value": "halloween",
+          "label": "Halloween - Spooky Orange & Black"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "id": "enable_event_announcement",
+      "type": "checkbox",
+      "label": "Enable Event Announcement Bar",
+      "default": false
+    },
+    {
+      "id": "event_announcement_text",
+      "type": "text",
+      "label": "Event Announcement Text",
+      "default": "🎉 Special Event - Limited Time Offer!"
+    },
+    {
+      "id": "event_announcement_icon",
+      "type": "text",
+      "label": "Event Announcement Icon (Emoji)",
+      "default": "🎉"
+    },
+    {
+      "id": "event_announcement_link",
+      "type": "url",
+      "label": "Event Announcement Link"
+    },
+    {
+      "id": "event_announcement_cta",
+      "type": "text",
+      "label": "Event Announcement CTA Text",
+      "default": "Shop Now"
+    },
+    {
+      "id": "show_event_badge",
+      "type": "checkbox",
+      "label": "Show Event Badge on Logo",
+      "default": false
+    },
+    {
+      "id": "event_badge_text",
+      "type": "text",
+      "label": "Event Badge Text",
+      "default": "Special Event"
+    },
+    {
+      "type": "header",
+      "content": "🎨 Macedonia Madness - Event Colors"
+    },
+    {
+      "id": "color_primary_default",
+      "type": "color",
+      "label": "Default Primary Color",
+      "default": "#000000"
+    },
+    {
+      "id": "color_secondary_default",
+      "type": "color",
+      "label": "Default Secondary Color",
+      "default": "#ffffff"
+    },
+    {
+      "id": "color_accent_default",
+      "type": "color",
+      "label": "Default Accent Color",
+      "default": "#C41E3A"
+    },
+    {
+      "id": "color_primary_christmas",
+      "type": "color",
+      "label": "Christmas Primary Color",
+      "default": "#C41E3A"
+    },
+    {
+      "id": "color_secondary_christmas",
+      "type": "color",
+      "label": "Christmas Secondary Color",
+      "default": "#2E8B57"
+    },
+    {
+      "id": "color_accent_christmas",
+      "type": "color",
+      "label": "Christmas Accent Color",
+      "default": "#FFD700"
+    },
+    {
+      "id": "color_primary_valentine",
+      "type": "color",
+      "label": "Valentine Primary Color",
+      "default": "#FF1744"
+    },
+    {
+      "id": "color_secondary_valentine",
+      "type": "color",
+      "label": "Valentine Secondary Color",
+      "default": "#E91E63"
+    },
+    {
+      "id": "color_accent_valentine",
+      "type": "color",
+      "label": "Valentine Accent Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "id": "color_primary_summer",
+      "type": "color",
+      "label": "Summer Primary Color",
+      "default": "#03A9F4"
+    },
+    {
+      "id": "color_secondary_summer",
+      "type": "color",
+      "label": "Summer Secondary Color",
+      "default": "#FF9800"
+    },
+    {
+      "id": "color_accent_summer",
+      "type": "color",
+      "label": "Summer Accent Color",
+      "default": "#FFEB3B"
+    },
+    {
+      "id": "color_primary_blackfriday",
+      "type": "color",
+      "label": "Black Friday Primary Color",
+      "default": "#000000"
+    },
+    {
+      "id": "color_secondary_blackfriday",
+      "type": "color",
+      "label": "Black Friday Secondary Color",
+      "default": "#FF0000"
+    },
+    {
+      "id": "color_accent_blackfriday",
+      "type": "color",
+      "label": "Black Friday Accent Color",
+      "default": "#FFD700"
+    },
+    {
+      "id": "color_primary_halloween",
+      "type": "color",
+      "label": "Halloween Primary Color",
+      "default": "#FF6600"
+    },
+    {
+      "id": "color_secondary_halloween",
+      "type": "color",
+      "label": "Halloween Secondary Color",
+      "default": "#000000"
+    },
+    {
+      "id": "color_accent_halloween",
+      "type": "color",
+      "label": "Halloween Accent Color",
+      "default": "#6A0DAD"
+    },
+    {
+      "type": "header",
+      "content": "🏷️ Macedonia Madness - Event Logos"
+    },
+    {
+      "id": "logo_christmas",
+      "type": "image_picker",
+      "label": "Christmas Logo"
+    },
+    {
+      "id": "logo_valentine",
+      "type": "image_picker",
+      "label": "Valentine's Day Logo"
+    },
+    {
+      "id": "logo_summer",
+      "type": "image_picker",
+      "label": "Summer Logo"
+    },
+    {
+      "id": "logo_blackfriday",
+      "type": "image_picker",
+      "label": "Black Friday Logo"
+    },
+    {
+      "id": "logo_halloween",
+      "type": "image_picker",
+      "label": "Halloween Logo"
+    },
+    {
+      "type": "header",
+      "content": "📱 Language & Location"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_locale_selector",
+      "label": "Enable Language Selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "label": "Enable Country Selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "🔗 Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_media",
+      "label": "Show Social Media (Desktop)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_media_mobile",
+      "label": "Show Social Media (Mobile)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "🏷️ Logo Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "id": "logo_width",
+      "type": "range",
+      "min": 50,
+      "max": 350,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop Logo Width",
+      "default": 200
+    },
+    {
+      "id": "mobile_logo_width",
+      "type": "range",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile Logo Width",
+      "default": 160
+    },
+    {
+      "id": "logo_scale",
+      "type": "range",
+      "min": 80,
+      "max": 120,
+      "step": 5,
+      "unit": "%",
+      "label": "Logo Scale",
+      "default": 100
+    },
+    {
+      "id": "macedonia_tagline",
+      "type": "text",
+      "label": "Brand Tagline",
+      "default": "Premium Fashion & Accessories"
+    },
+    {
+      "type": "header",
+      "content": "🧭 Navigation"
+    },
+    {
+      "id": "menu",
+      "type": "link_list",
+      "label": "Primary Menu",
+      "default": "main-menu"
+    },
+    {
+      "id": "secondary_menu",
+      "type": "link_list",
+      "label": "Secondary Menu"
+    },
+    {
+      "type": "header",
+      "content": "⭐ Featured Link"
+    },
+    {
+      "id": "featured_link_label",
+      "type": "text",
+      "label": "Featured Link Text"
+    },
+    {
+      "id": "featured_link_color",
+      "type": "color",
+      "label": "Featured Link Color",
+      "default": "#C41E3A"
+    },
+    {
+      "type": "header",
+      "content": "👻 Transparent Header"
+    },
+    {
+      "id": "enable_transparent_on_home",
+      "type": "checkbox",
+      "label": "Enable Transparent Header on Homepage",
+      "default": true
+    },
+    {
+      "id": "enable_transparent_template_list",
+      "type": "textarea",
+      "placeholder": "collection, product.landing, page.about",
+      "label": "Additional Transparent Templates",
+      "info": "Comma-separated list of template names"
+    },
+    {
+      "id": "logo_transparent",
+      "type": "image_picker",
+      "label": "Transparent Header Logo"
+    },
+    {
+      "id": "color_text_transparent",
+      "type": "color",
+      "label": "Transparent Header Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "id": "color_count_transparent",
+      "type": "color",
+      "label": "Transparent Header Cart Count Color",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "compact_meganav",
+      "name": "Compact Mega Navigation",
+      "settings": [
+        {
+          "type": "text",
+          "id": "dropdown_parent_link",
+          "label": "Parent Link Text",
+          "info": "Must match exactly with a main menu link"
+        }
+      ]
+    },
+    {
+      "type": "full_width_meganav",
+      "name": "Full Width MegaNav", 
+      "settings": [
+        {
+          "type": "text",
+          "id": "dropdown_parent_link",
+          "label": "Parent Link Text",
+          "info": "Must match exactly with a main menu link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

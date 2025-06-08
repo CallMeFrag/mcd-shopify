@@ -1,0 +1,122 @@
+{% if section.settings.enabled %}
+  <div class="announcement-marquee">
+    <div class="marquee-wrapper">
+      <div class="marquee-track" style="animation-duration: {{ section.settings.speed }}s;">
+        {% assign messages = section.settings.messages | split: ',' %}
+        {% for i in (1..20) %}
+          {% for message in messages %}
+            <span class="separator">•</span>
+            <span class="announcement-item">{{ message | strip }}</span>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<style>
+     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+    .announcement-marquee {
+      width: 100%;
+      overflow: hidden;
+      padding: 14px 0;
+      background-color: {{ section.settings.bg_color }};
+      color: {{ section.settings.text_color }};
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      text-transform: uppercase;
+      border-bottom: none;
+      position: relative;
+      z-index: 9999;
+    }
+
+    .marquee-wrapper {
+      width: 100%;
+      overflow: hidden;
+    }
+
+  .marquee-track {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: marqueeScroll linear infinite;
+    will-change: transform;
+  }
+
+  .announcement-item,
+  .separator {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+    @keyframes marqueeScroll {
+      from { transform: translateX(0%); }
+      to   { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 768px) {
+      .announcement-marquee {
+        font-size: 11px;
+        padding: 12px 0;
+      }
+
+      .announcement-item {
+        padding: 0 10px;
+      }
+
+      .separator {
+        margin-right: 10px;
+      }
+    }
+</style>
+
+{% schema %}
+{
+  "name": "Announcement Bar [FRAG]",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Abilita barra",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "messages",
+      "label": "Messaggi (separati da ,)",
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Velocità (secondi per ciclo)",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Colore sfondo",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Colore testo",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Announcement",
+      "category": "Barre"
+    }
+  ]
+}
+{% endschema %}
